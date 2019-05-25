@@ -37,7 +37,7 @@ server.get('/api/zoos', (req, res) => {
     .catch(err => {
       res.status(500).json({ error: err });
     })
-})
+});
 
 server.get('/api/zoos/:id', (req, res) => {
   const zooId = req.params.id;
@@ -53,7 +53,7 @@ server.get('/api/zoos/:id', (req, res) => {
     .catch(err => {
       res.status(500).json({ error: err });
     });
-})
+});
 
 server.delete('/api/zoos/:id', (req, res) => {
   const zooId = req.params.id;
@@ -67,7 +67,22 @@ server.delete('/api/zoos/:id', (req, res) => {
     .catch(err => {
       res.status(500).json({ error: err });
     });
-})
+});
+
+server.put('/api/zoos/:id', (req, res) => {
+  const zooId = req.params.id;
+  const updateData = req.body;
+
+  db('zoos')
+    .where({ id: zooId})
+    .update(updateData)
+    .then(count => {
+      res.json(count);
+    })
+    .catch(err => {
+      res.status(500).json({ error: err });
+    });
+});
 
 const port = 3300;
 server.listen(port, function() {
