@@ -12,6 +12,33 @@ server.use(helmet());
 
 // endpoints here
 
+server.post('/api/zoos', (req, res) => {
+  const zoo = req.body;
+
+  if (!zoo.name) {
+    return res.status(400).json({ error: 'Name was not supplied'});
+  }
+
+  db.insert(zoo)
+    .into('zoos')
+    .then(id => {
+      res.status(201).json(id);
+    })
+    .catch(err => {
+      res.status(500).json({ error: err });
+    });
+});
+
+server.get('/api/zoos', (req, res) => {
+  db.select().from('zoos')
+    .then(data => {
+      res.json(data);
+    })
+    .catch(err => {
+      res.status(500).json({ error: err });
+    })
+})
+
 const port = 3300;
 server.listen(port, function() {
   console.log(`\n=== Web API Listening on http://localhost:${port} ===\n`);
